@@ -1,10 +1,9 @@
-import Image from "next/image";
-import { Button } from "@/components/ui/button"
 import CarouselTextBanner from "@/components/carousel-text-banner"
 import FeaturedProducts from "@/components/featured-products";
 import BannerDiscount from "@/components/banner-discount"
 import ChooseCategory from "@/components/choose-category";
 import InfoCards from "@/components/info-cards";
+import BannerProduct from "@/components/banner-product";
 
 
 export default function Home() {
@@ -14,7 +13,7 @@ export default function Home() {
     <FeaturedProducts />
     <InfoCards />
     <BannerDiscount />
-    <ChooseCategory />
+    <BannerProduct />
    </main>
   );
 }

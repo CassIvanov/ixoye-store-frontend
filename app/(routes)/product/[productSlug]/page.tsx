@@ -1,0 +1,38 @@
+"use client"
+import { useGetProductBySlug } from "@/api/getProductBySlug"
+import { useParams } from "next/navigation"
+import SkeletonProduct from "./components/skeleton-product"
+import CarouselProduct from "./components/carousel-product"
+import InfoProduct from "@/app/(routes)/product/[productSlug]/components/info-product"
+
+export default function Page() {
+  const params = useParams()
+
+  const productSlug = Array.isArray(params.productSlug)
+    ? params.productSlug[0]
+    : params.productSlug
+
+  const { product, loading, error } = useGetProductBySlug(productSlug)
+
+  if (loading) {
+    return <SkeletonProduct />
+  }
+
+  if (error || !product) {
+    return <p>No se encontró el producto</p>
+  }
+
+  return (
+    <div className="max-w-6xl py-4 mx-auto sm:py-32 sm:px-24">
+      <div className="grid sm:grid-cols-2">
+        <div>
+          <CarouselProduct images={product.images ?? []} />
+        </div>
+
+        <div className="sm:px-12">
+          <InfoProduct product={product}/>
+        </div>
+      </div>
+    </div>
+  )
+}

@@ -11,7 +11,7 @@ export default function Footer() {
 
           {/* Logo + descripción */}
           <div>
-            <img src="/images/logo.png" alt="logo" className="h-12 mb-4" />
+            <img src="/logo.png" alt="logo" className="h-12 mb-4" />
             <p className="text-sm text-gray-400 leading-relaxed">
               Comercializadora e importadora de refacciones para motores diésel, transporte pesado, transporte liviano, para construcción y agrícola.
             </p>
@@ -32,7 +32,7 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/carrito" className="hover:text-white transition">
+                <Link href="app/cart" className="hover:text-white transition">
                   Carrito
                 </Link>
               </li>

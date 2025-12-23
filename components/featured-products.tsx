@@ -1,19 +1,22 @@
+/* eslint-disable @next/next/no-img-element */
 "use client"
 import { useGetFeaturedProducts } from "@/api/useGetFeturedProducts";
 import { ResponeType } from "@/types/response";
 import { Carousel, CarouselContent, CarouselNext, CarouselPrevious, CarouselItem } from "./ui/carousel";
 import SkeletonSchema from "./skeletonSchema";
-import {productType} from "@/types/product";
+import {ProductType} from "@/types/product";
 import { Images } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Expand, ShoppingCart } from "lucide-react";
 import IconButton from "./ui/icon-button";
 import { useRouter } from "next/navigation";
+import { useCart } from "@/hooks/use-cart";
 
 
 const FeaturedProducts = () =>{
     const {result, loading}: ResponeType = useGetFeaturedProducts()
     const router = useRouter()
+    const {addItem} = useCart()
 
     return (
      <div className="max-w-6xl py-4 mx-auto sm:py-16 sm:px-24">
@@ -26,7 +29,7 @@ const FeaturedProducts = () =>{
                 )}
                 
                 {result !== null && (
-                    result.map((product: productType) => {
+                    result.map((product: ProductType) => {
                         
                         if (!product) return null;
                         
@@ -56,17 +59,18 @@ const FeaturedProducts = () =>{
                                         <div className="flex justify-center gap-x-6">
                                             <IconButton
                                             onClick={() => router.push(`product/${slug}`)}
-                                            icon={<Expand size={20} className="text-gray-600" />}
+                                            icon={<Expand size={20} 
+                                            className="text-gray-600" />}
                                             />
                                             <IconButton
-                                            onClick={() => console.log("Add item")}
-                                            icon={<ShoppingCart size={20} className="text-gray-600" />}
+                                            onClick={() => addItem(product)}
+                                            icon={<ShoppingCart size={20} 
+                                            className="text-gray-600" />}
                                             />
                                         </div>
                                         </div>
                                     </CardContent>
 
-                                    {/* TEXTO */}
                                     <div className="mt-auto flex justify-between gap-4 px-8">
                                         <h3 className="text-lg font-bold line-clamp-2 min-h-[3rem]">
                                         {productName}

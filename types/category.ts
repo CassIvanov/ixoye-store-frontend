@@ -1,14 +1,13 @@
 export type CategoryType = {
-    id:number;
-    attributes: {
-        categoryName: string;
-        slug:string;
-        mainImage: {
-            data: {
-                attributes:{
-                    url: string;
-                }
-            }
-        }
-    }
-}
+  id: number;
+  categoryName: string;
+  mainImage: {
+    data:{
+        url:string;
+    } | null;
+  };
+  slug: string;
+  createdAt: string;
+  updatedAt: string;
+  publishedAt: string;
+};
