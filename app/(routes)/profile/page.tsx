@@ -18,7 +18,7 @@ export default function ProfilePage() {
 
   if (loading)
     return (
-      <div className="p-20 text-center animate-pulse italic">
+      <div className="p-20 text-center animate-pulse italic text-sky-700">
         Cargando perfil...
       </div>
     );
@@ -30,10 +30,15 @@ export default function ProfilePage() {
   return (
     <div className="p-6 md:p-12 max-w-4xl mx-auto space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold tracking-tight">Mi Perfil</h1>
+        <h1 className="text-3xl font-bold tracking-tight text-sky-700">
+          Mi Perfil
+        </h1>
         <div className="flex gap-2">
           <Link href="/profile/edit">
-            <Button variant="outline" className="gap-2">
+            <Button
+              variant="outline"
+              className="gap-2 border-sky-200 text-sky-700 hover:bg-sky-50"
+            >
               <Settings2 className="w-4 h-4" />
               {profile ? "Editar Datos" : "Crear Perfil"}
             </Button>
@@ -41,36 +46,39 @@ export default function ProfilePage() {
           <Button
             variant="ghost"
             onClick={logout}
-            className="text-destructive hover:bg-destructive/10"
+            className="text-red-600 hover:bg-red-50 hover:text-red-700"
           >
             <LogOut className="w-4 h-4" />
           </Button>
         </div>
       </div>
 
-      <Card className="shadow-xl border-none">
-        <CardHeader className="bg-primary/5 border-b pb-8 pt-8">
+      <Card className="shadow-2xl shadow-sky-100/50 border-none overflow-hidden">
+        {/* Header con degradado suave en tonos sky */}
+        <CardHeader className="bg-gradient-to-r from-sky-50 to-white border-b border-sky-100 pb-8 pt-8">
           <div className="flex flex-col items-center text-center gap-3">
-            <div className="bg-background p-2 rounded-full shadow-sm">
-              <UserCircle className="w-20 h-20 text-primary" />
+            <div className="bg-white p-2 rounded-full shadow-md border border-sky-100">
+              <UserCircle className="w-20 h-20 text-sky-700" />
             </div>
             <div>
-              <CardTitle className="text-2xl font-bold">
+              <CardTitle className="text-2xl font-bold text-sky-900">
                 {user.username}
               </CardTitle>
-              <p className="text-muted-foreground">{user.email}</p>
+              <p className="text-sky-600/80 font-medium">{user.email}</p>
             </div>
           </div>
         </CardHeader>
 
-        <CardContent className="pt-10">
+        <CardContent className="pt-10 bg-white">
           {!profile ? (
-            <div className="text-center py-12 px-4 rounded-xl border-2 border-dashed">
-              <p className="text-muted-foreground mb-4">
+            <div className="text-center py-12 px-4 rounded-xl border-2 border-dashed border-sky-200 bg-sky-50/30">
+              <p className="text-sky-800/70 mb-4 font-medium">
                 Aún no has configurado tu información personal para compras.
               </p>
               <Link href="/profile/edit">
-                <Button>Completar ahora</Button>
+                <Button className="bg-sky-700 hover:bg-sky-800 text-white">
+                  Completar ahora
+                </Button>
               </Link>
             </div>
           ) : (
@@ -78,27 +86,27 @@ export default function ProfilePage() {
               <InfoBlock
                 label="Nombre(s)"
                 value={data.firstName}
-                icon={<User />}
+                icon={<User size={18} />}
               />
               <InfoBlock
                 label="Apellido Paterno"
                 value={data.lastName}
-                icon={<User />}
+                icon={<User size={18} />}
               />
               <InfoBlock
                 label="Apellido Materno"
                 value={data.motherLastName}
-                icon={<User />}
+                icon={<User size={18} />}
               />
               <InfoBlock
                 label="Teléfono"
                 value={data.phone || "No asignado"}
-                icon={<Phone />}
+                icon={<Phone size={18} />}
               />
               <InfoBlock
                 label="Fecha de Nacimiento"
                 value={data.birthDate || "No asignada"}
-                icon={<Calendar />}
+                icon={<Calendar size={18} />}
               />
             </div>
           )}
@@ -118,12 +126,12 @@ function InfoBlock({
   icon: any;
 }) {
   return (
-    <div className="p-4 rounded-xl bg-muted/30 border border-transparent hover:border-primary/20 transition-colors">
-      <div className="text-primary/60 mb-2">{icon}</div>
-      <p className="text-[10px] font-extrabold uppercase text-muted-foreground tracking-widest">
+    <div className="p-4 rounded-xl bg-sky-50/50 border border-sky-100/80 cursor-default select-none shadow-sm">
+      <div className="text-sky-600 mb-2">{icon}</div>
+      <p className="text-[10px] font-black uppercase text-sky-800/50 tracking-widest">
         {label}
       </p>
-      <p className="text-md font-medium truncate">{value}</p>
+      <p className="text-md font-bold text-sky-900 truncate">{value}</p>
     </div>
   );
 }

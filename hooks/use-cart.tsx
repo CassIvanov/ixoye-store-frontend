@@ -1,54 +1,86 @@
-import { ProductType } from "@/types/product"
-import { create } from "zustand"
-import { persist, createJSONStorage } from "zustand/middleware"
-import { toast } from "sonner"
+import { ProductType } from "@/types/product";
+import { create } from "zustand";
+import { persist, createJSONStorage } from "zustand/middleware";
+import { toast } from "sonner";
 
 interface CartStore {
-items: ProductType[]
-addItem: (data: ProductType) => void
-removeItem: (id: number) => void
-removeAll: () => void
+  items: ProductType[];
+  addItem: (data: ProductType) => void;
+  removeItem: (id: number) => void;
+  updateQuantity: (id: number, quantity: number) => void;
+  removeAll: () => void;
 }
 
 export const useCart = create(
-    persist<CartStore>(
-        (set, get) => ({
-            items: [],
+  persist<CartStore>(
+    (set, get) => ({
+      items: [],
 
-        addItem: (data) => {
-                const currentItems = get().items
-                const existingItem = currentItems.find(
-                (item) => item.id === data.id
-                )
+      addItem: (data) => {
+        const currentItems = get().items;
+        const existingItem = currentItems.find((item) => item.id === data.id);
+        const stockAvailable = data.stock ?? 0;
 
         if (existingItem) {
-            toast.error("El producto ya existe en el carrito.")
-            return
+          const nextQuantity = (existingItem.quantity || 1) + 1;
+
+          if (nextQuantity > stockAvailable) {
+            toast.error("Límite de stock alcanzado", {
+              description: `Solo hay ${stockAvailable} unidades disponibles.`,
+            });
+            return;
+          }
+
+          const updatedItems = currentItems.map((item) =>
+            item.id === data.id ? { ...item, quantity: nextQuantity } : item
+          );
+          set({ items: updatedItems });
+          toast.success("Cantidad actualizada.");
+          return;
+        }
+
+        if (stockAvailable <= 0) {
+          toast.error("Producto sin existencias.");
+          return;
         }
 
         set({
-            items: [...currentItems, data],
-        })
+          items: [...currentItems, { ...data, quantity: 1 }],
+        });
 
-        toast.success("Producto agregado al carrito.")
-        },
+        toast.success("Producto agregado al carrito.");
+      },
 
-    removeItem: (id) => {
+      updateQuantity: (id: number, quantity: number) => {
+        const currentItems = get().items;
+        const item = currentItems.find((i) => i.id === id);
+        const stockAvailable = item?.stock ?? 0;
+
+        toast.error("Límite de compra alcanzado", {
+          description: `No es posible añadir más unidades al carrito.`,
+        });
+
+        const updatedItems = currentItems.map((item) =>
+          item.id === id ? { ...item, quantity: quantity } : item
+        );
+        set({ items: updatedItems });
+      },
+
+      removeItem: (id) => {
         set({
-            items: get().items.filter((item) => item.id !== id),
-        })
+          items: get().items.filter((item) => item.id !== id),
+        });
+        toast.info("Producto eliminado del carrito.");
+      },
 
-        toast.info("Producto eliminado del carrito.")
-    },
-
-    removeAll: () => {
-        set({ items: [] })
-        toast.info("Carrito vaciado.")
-    },
+      removeAll: () => {
+        set({ items: [] });
+        toast.info("Carrito vaciado.");
+      },
     }),
     {
-        name: "cart-storage",
-        storage: createJSONStorage(() => localStorage),
+      name: "cart-storage",
+      storage: createJSONStorage(() => localStorage),
     }
   )
-)
+);

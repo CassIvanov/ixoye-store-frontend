@@ -35,11 +35,11 @@ const ProductCard = ({ product }: ProductCardProps) => {
                 <div className="flex justify-center gap-x-6">
                   <IconButton
                     onClick={() => router.push(`/product/${product.slug}`)}
-                    icon={<Expand size={20} className="text-gray-600" />}
+                    icon={<Expand size={20} className="text-sky-700" />}
                   />
                   <IconButton
                     onClick={() => console.log("product")}
-                    icon={<ShoppingCart size={20} className="text-gray-600" />}
+                    icon={<ShoppingCart size={20} className="text-sky-700" />}
                   />
                 </div>
               </div>
@@ -47,8 +47,10 @@ const ProductCard = ({ product }: ProductCardProps) => {
           ))}
         </CarouselContent>
       </Carousel>
-      <p className="text-2xl text-center">{product.productName}</p>
-      <p className="font-bold text-center">${formatPrice(product.price)}</p>
+      <p className="text-2xl text-center text-sky-900">{product.productName}</p>
+      <p className="font-bold text-center text-emerald-600">
+        ${formatPrice(product.price)}
+      </p>
     </Link>
   );
 };

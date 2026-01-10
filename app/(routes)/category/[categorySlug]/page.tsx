@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { Separator } from "@/components/ui/separator";
@@ -8,12 +9,12 @@ import ProductCard from "@/app/(routes)/category/[categorySlug]/components/produ
 import { ProductType } from "@/types/product";
 import { useState } from "react";
 import { useGetCategoryWithFilters } from "@/api/getCategoryWithFilters";
-import FiltersSidebar from "./components/filters-sidebar";
 
 export default function Page() {
   const { categorySlug } = useParams<{ categorySlug: string }>();
   const { result, loading, error } = useGetCategoryProduct(categorySlug);
   const [filterOrigin, setFilterOrigin] = useState("");
+
   const { category, loading: loadingCategory } =
     useGetCategoryWithFilters(categorySlug);
 
@@ -26,32 +27,46 @@ export default function Page() {
           (product: ProductType) => product.origin === filterOrigin
         ));
 
-  if (loading) return <p>Cargando...</p>;
-  if (error) return <p>{error}</p>;
+  if (error)
+    return (
+      <div className="max-w-6xl py-20 mx-auto text-center">
+        <p className="text-red-500 font-semibold bg-red-50 inline-block px-4 py-2 rounded-lg border border-red-100">
+          {error}
+        </p>
+      </div>
+    );
 
   return (
     <div className="max-w-6xl py-4 mx-auto sm:py-16 sm:px-24">
-      {category?.categoryName && (
-        <h1 className="text-3xl font-medium">{category.categoryName}</h1>
+      {loadingCategory ? (
+        <div className="h-10 w-64 bg-sky-100 animate-pulse rounded-md mb-4" />
+      ) : (
+        category?.categoryName && (
+          <h1 className="text-3xl font-bold text-sky-900">
+            {category.categoryName}
+          </h1>
+        )
       )}
 
-      <Separator />
+      <Separator className="my-4 bg-sky-100" />
 
-      <div className="sm:flex sm:justify-between">
-        {category?.filters && <FiltersSidebar filters={category.filters} />}
-
+      <div className="w-full">
         <div className="grid w-full gap-5 mt-8 sm:grid-cols-2 md:grid-cols-3 md:gap-10">
-          {loading && <SkeletonSchema grid={3} />}
+          {loading && (
+            <>
+              <SkeletonSchema grid={3} />
+              <SkeletonSchema grid={3} />
+            </>
+          )}
 
-          {filteredProducts &&
-            filterOrigin !== "" &&
-            filteredProducts.length === 0 && (
-              <p className="col-span-full text-center text-muted-foreground mt-15">
-                No se encontraron resultados
-              </p>
-            )}
+          {!loading && filteredProducts && filteredProducts.length === 0 && (
+            <p className="col-span-full text-center text-sky-800/60 mt-15 font-medium">
+              No se encontraron productos en esta categoría.
+            </p>
+          )}
 
-          {filteredProducts &&
+          {!loading &&
+            filteredProducts &&
             filteredProducts.length > 0 &&
             filteredProducts.map((product: ProductType) => (
               <ProductCard key={product.id} product={product} />
